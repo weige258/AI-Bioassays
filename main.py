@@ -59,4 +59,5 @@ if command==2:
             if index==3:
                 print(path)
                 print("其他")
+    input("按任意键退出")
     
