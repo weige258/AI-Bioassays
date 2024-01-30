@@ -1,6 +1,11 @@
 import torch
 import torchvision
 
+if torch.cuda.is_available():
+    device="cuda"
+else:
+    device="cpu"
+
 class Net(torch.nn.Module):
     def __init__(self):
         super().__init__()
@@ -12,7 +17,7 @@ class Net(torch.nn.Module):
         self.n2=torch.nn.Linear(in_features=200,out_features=200)
         self.n3=torch.nn.Linear(in_features=200,out_features=4)
     def forward(self,tensor):
-        tensor=tensor.to('cuda')
+        tensor=tensor.to(device)
         tensor=torchvision.transforms.Resize((500,500))(tensor)
         tensor = self.c1(tensor)
         tensor = self.m1(tensor)
@@ -23,11 +28,6 @@ class Net(torch.nn.Module):
         tensor=self.n2(tensor)
         tensor=self.n3(tensor)
         return tensor
-
-if torch.cuda.is_available():
-    device="cuda"
-else:
-    device="cpu"
 
 try:
     model=torch.load(f='model.pth').to(device)
