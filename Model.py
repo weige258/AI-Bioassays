@@ -8,9 +8,9 @@ class Net(torch.nn.Module):
         self.m1=torch.nn.MaxPool2d(kernel_size=3)
         self.c2 = torch.nn.Conv2d(kernel_size=3, in_channels=3, out_channels=3)
         self.m2 = torch.nn.MaxPool2d(kernel_size=3)
-        self.n1=torch.nn.Linear(in_features=3*54*54,out_features=500)
-        self.n2=torch.nn.Linear(in_features=500,out_features=400)
-        self.n3=torch.nn.Linear(in_features=400,out_features=4)
+        self.n1=torch.nn.Linear(in_features=3*54*54,out_features=200)
+        self.n2=torch.nn.Linear(in_features=200,out_features=200)
+        self.n3=torch.nn.Linear(in_features=200,out_features=4)
     def forward(self,tensor):
         tensor=tensor.to('cuda')
         tensor=torchvision.transforms.Resize((500,500))(tensor)
@@ -23,22 +23,28 @@ class Net(torch.nn.Module):
         tensor=self.n2(tensor)
         tensor=self.n3(tensor)
         return tensor
+
+if torch.cuda.is_available():
+    device="cuda"
+else:
+    device="cpu"
+
 try:
-    model=torch.load(f='model.pth').to('cuda')
+    model=torch.load(f='model.pth').to(device)
     print('模型从本地载入')
 except:
-    model=Net().to('cuda')
+    model=Net().to(device)
     print('新创建模型')
 
-loss_fn=torch.nn.MSELoss().to('cuda')
-optimezer=torch.optim.ASGD(model.parameters(),lr=0.003)
+loss_fn=torch.nn.CrossEntropyLoss().to(device)
+optimezer=torch.optim.Adam(model.parameters(),lr=0.003)
 
 def train(img_tensor,label_tensor):
-    img_tensor=torch.tensor(img_tensor,dtype=torch.float).to('cuda')
-    label_tensor = torch.tensor(label_tensor, dtype=torch.float).to('cuda')
+    img_tensor=torch.tensor(img_tensor,dtype=torch.float).to(device)
+    label_tensor = torch.tensor(label_tensor, dtype=torch.float).to(device)
     output=model(img_tensor)
-    print(f"输出值/期望值是{output}/{label_tensor}")
     loss=loss_fn(output,label_tensor)
-    optimezer.zero_grad()
+    print(loss)
     loss.backward()
     optimezer.step()
+    optimezer.zero_grad()
