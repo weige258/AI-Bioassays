@@ -37,7 +37,7 @@ except:
     print('新创建模型')
 
 loss_fn=torch.nn.CrossEntropyLoss().to(device)
-optimezer=torch.optim.Adam(model.parameters(),lr=0.003)
+optimezer=torch.optim.Adam(model.parameters(),lr=0.0003)
 
 def train(img_tensor,label_tensor):
     img_tensor=torch.tensor(img_tensor,dtype=torch.float).to(device)

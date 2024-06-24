@@ -29,12 +29,13 @@ while True:
         continue
 
 if command==1:
-    datasets=torchvision.datasets.ImageFolder(root='data',transform=torchvision.transforms.ToTensor())
-    load=DataLoader(datasets,shuffle=True)
-    for data in load:
-        tensor,label=data
-        label_tensor=label_to_tensor(int(label))
-        train(tensor,label_tensor)
+    for loop in range(10):
+        datasets=torchvision.datasets.ImageFolder(root='data',transform=torchvision.transforms.ToTensor())
+        load=DataLoader(datasets,shuffle=True)
+        for data in load:
+            tensor,label=data
+            label_tensor=label_to_tensor(int(label))
+            train(tensor,label_tensor)
 torch.save(obj=model,f='model.pth')
 
 if command==2:
