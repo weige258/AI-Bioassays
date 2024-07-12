@@ -50,15 +50,15 @@ if command==2:
             index=output_list.index(max(output_list))
             if index==0:
                 print(path)
-                print("人")
+                print("预测是人")
             if index==1:
                 print(path)
-                print("狗")
+                print("预测是狗")
             if index==2:
                 print(path)
-                print("猫")
+                print("预测是猫")
             if index==3:
                 print(path)
-                print("其他")
+                print("预测是其他")
     input("按任意键退出")
     
